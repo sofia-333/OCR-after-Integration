@@ -183,7 +183,7 @@ docImage.onload = () => {
 
 
   function dragMousedown(e, parent) {
-    let lastChild = parent.parentNode.lastChild.nextSibling
+    let lastChild = parent.parentNode.lastChild.nextSibling;
     parent.parentNode.insertBefore(parent, lastChild);
 
     oldDragPosX = e.pageX;
@@ -194,8 +194,8 @@ docImage.onload = () => {
     let _dropDownCopy = dragBtnParent.getElementsByClassName("new-div")[0].firstChild;
     before_after = [];
     before_after[0] = dragBtnParent.cloneNode();
-    before_after[1] = dragBtnParent.innerHTML;
-    before_after[2] = _dropDownCopy.selectedIndex;
+    before_after[0].innerHTML = dragBtnParent.innerHTML;
+    before_after[1] = _dropDownCopy.selectedIndex;
 
     $(document.body).on('mousemove', dragMousemove);
     $(document.body).on('mouseup', dragMouseup);
@@ -214,22 +214,22 @@ docImage.onload = () => {
 
   function dragMouseup(e) {
     let _dropDownCopy = dragBtnParent.getElementsByClassName("new-div")[0].firstChild;
-    before_after[3] = dragBtnParent.cloneNode();
-    before_after[4] = dragBtnParent.innerHTML;
-    before_after[5] = _dropDownCopy.selectedIndex;
+    before_after[2] = dragBtnParent.cloneNode();
+    before_after[2].innerHTML = dragBtnParent.innerHTML;
+    before_after[3] = _dropDownCopy.selectedIndex;
     //checking if it really changed the position
-    if (before_after[0].style.top !== before_after[3].style.top || before_after[0].style.left !== before_after[3].style.left) {
+    if (before_after[0].style.top !== before_after[2].style.top || before_after[0].style.left !== before_after[2].style.left) {
       redoStack.clear();
       undoStack.push(before_after);
     }
-    $(document.body).off('mousemove', dragMousemove)
-    $(document.body).off('mousemove', dragMouseup)
+    $(document.body).off('mousemove', dragMousemove);
+    $(document.body).off('mouseup', dragMouseup);
   }
 
 
   function createResizePoints(newDiv) {
-    let res_se = elt('div', 'resizers se')
-    $(res_se).on("mousedown", resizeMousedown)
+    let res_se = elt('div', 'resizers se');
+    $(res_se).on("mousedown", resizeMousedown);
     newDiv.appendChild(res_se);
   }
 
@@ -245,8 +245,8 @@ docImage.onload = () => {
 
     before_after = [];
     before_after[0] = currentDiv.parentElement.cloneNode();
-    before_after[1] = currentDiv.parentElement.innerHTML;
-    before_after[2] = currentDropdown.selectedIndex;
+    before_after[0].innerHTML = currentDiv.parentElement.innerHTML;
+    before_after[1] = currentDropdown.selectedIndex;
 
     $(document.body).on("mousemove", resizeMousemove);
     $(document.body).on("mouseup", resizeMouseup);
@@ -263,10 +263,10 @@ docImage.onload = () => {
 
   function resizeMouseup(e) {
     isResizing = false;
-    before_after[3] = currentDiv.parentElement.cloneNode();
-    before_after[4] = currentDiv.parentElement.innerHTML;
-    before_after[5] = currentDropdown.selectedIndex;
-    if (before_after[1] !== before_after[4]) { //checking if it really changed the position
+    before_after[2] = currentDiv.parentElement.cloneNode();
+    before_after[2].innerHTML = currentDiv.parentElement.innerHTML;
+    before_after[3] = currentDropdown.selectedIndex;
+    if (before_after[0] !== before_after[2]) { //checking if it really changed the position
       redoStack.clear();
       undoStack.push(before_after);
     }
@@ -277,8 +277,8 @@ docImage.onload = () => {
 
 
   function seResize(e, divToResize) {
-    currentDiv.style.width = currentDropdown.style.width = divToResize.width - (prevX - e.pageX) + "px";
-    currentDiv.style.height = currentDropdown.style.height = divToResize.height - (prevY - e.pageY) + "px";
+    currentDiv.style.width = currentDropdown.style.width = divToResize.width - (prevX - e.pageX) - 2 + "px";
+    currentDiv.style.height = currentDropdown.style.height = divToResize.height - (prevY - e.pageY) - 2 + "px";
 
     currentDelete.style.left = currentDrag.style.left = divToResize.width + 1 + (prevX - e.pageX) + "px";
     currentDelete.style.top = currentDrag.style.top = -5 - (prevY - e.pageY) + "px";
@@ -294,8 +294,8 @@ docImage.onload = () => {
 
       before_after = [];
       before_after[0] = _outerDivCopy.cloneNode();
-      before_after[1] = _outerDivCopy.innerHTML;
-      before_after[2] = _dropdownCopy.selectedIndex;//remember index of selected option dropdown before change
+      before_after[0].innerHTML = _outerDivCopy.innerHTML;
+      before_after[1] = _dropdownCopy.selectedIndex;//remember index of selected option dropdown before change
       saveSelectChangedIndexes(_dropdownCopy);
     };
   }
@@ -307,19 +307,19 @@ docImage.onload = () => {
       let _newDivCopy = _dropdownCopy.parentElement;
       let _outerDivCopy = _newDivCopy.parentElement;
 
-      before_after[3] = _outerDivCopy.cloneNode();
-      before_after[4] = _outerDivCopy.innerHTML;
-      before_after[5] = _dropdownCopy.selectedIndex;//remember index of selected option dropdown after change
+      before_after[2] = _outerDivCopy.cloneNode();
+      before_after[2].innerHTML = _outerDivCopy.innerHTML;
+      before_after[3] = _dropdownCopy.selectedIndex;//remember index of selected option dropdown after change
       redoStack.clear();
       undoStack.push(before_after);
     }
   }
 
   function recoverEvents(_outerDiv) {
-    const _newDiv = _outerDiv.firstChild
-    const _dragButton = _outerDiv.lastChild
-    const _deleteButton = _dragButton.previousSibling
-    const _resizers = _newDiv.lastChild
+    const _newDiv = _outerDiv.firstChild;
+    const _dragButton = _outerDiv.lastChild;
+    const _deleteButton = _dragButton.previousSibling;
+    const _resizers = _newDiv.lastChild;
 
     $(_deleteButton).on('click', onDivRemove)
 
@@ -335,7 +335,7 @@ docImage.onload = () => {
     console.log("undo pressed");
     if (!undoStack.isEmpty()) {
       let poppedElem = undoStack.pop();
-      redoStack.push([poppedElem[3], poppedElem[4], poppedElem[5], poppedElem[0], poppedElem[1], poppedElem[2]]);
+      redoStack.push([poppedElem[2], poppedElem[3], poppedElem[0], poppedElem[1]]);
 
       placeElementFromStackToDocument(poppedElem);
       console.log("undoStack", undoStack);
@@ -347,7 +347,7 @@ docImage.onload = () => {
     console.log("redo pressed");
     if (!redoStack.isEmpty()) {
       let poppedElem = redoStack.pop();
-      undoStack.push([poppedElem[3], poppedElem[4], poppedElem[5], poppedElem[0], poppedElem[1], poppedElem[2]]);
+      undoStack.push([poppedElem[2], poppedElem[3], poppedElem[0], poppedElem[1]]);
 
       placeElementFromStackToDocument(poppedElem);
       console.log("redoStack", redoStack);
@@ -358,14 +358,13 @@ docImage.onload = () => {
   function placeElementFromStackToDocument(poppedElem) {
     //deleting outer div ,which is in the undoStack, from document
     //remove only if exists(undo after deleting, for example, this element won't exist poppedElem[2] === 0)
-    if (poppedElem[3] !== 0) {
-      container.removeChild(document.getElementById(poppedElem[3].id));
+    if (poppedElem[2] !== 0) {
+      container.removeChild(document.getElementById(poppedElem[2].id));
     }
     if (poppedElem[0] !== 0) {
-      poppedElem[0].innerHTML = poppedElem[1];
       let _newDivCopy = poppedElem[0].getElementsByClassName("new-div")[0];
       let _dropdownCopy = _newDivCopy.firstChild;
-      _dropdownCopy.selectedIndex = poppedElem[2];
+      _dropdownCopy.selectedIndex = poppedElem[1];
       saveSelectCurrentIndexes(_newDivCopy);//adding EventListeners in this function
       container.appendChild(poppedElem[0]);
       recoverEvents(poppedElem[0]);
@@ -407,8 +406,8 @@ docImage.onload = () => {
         posY: posY - $imageTop,
       }
     }
-    if (posX) return posX - $imageLeft
-    if (posY) return posY - $imageTop
+    if (posX) return posX - $imageLeft;
+    if (posY) return posY - $imageTop;
   }
 
 
