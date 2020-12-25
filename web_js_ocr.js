@@ -135,12 +135,7 @@ docImage.onload = () => {
       height: divHeight + 'px',
       userSelect: 'none',
     })
-    for (let i = 0; i < 3; i++) {
-      let option = new Option;
-      option.text = `something ${i}`;
-      option.value = `value${i}`;
-      dropdown.append(option)
-    }
+    setOptions(dropdown);
     newDiv.appendChild(dropdown);
     saveSelectCurrentIndexes(newDiv);
   }
@@ -165,7 +160,7 @@ docImage.onload = () => {
     container.removeChild(_outerDivCopy);
     let _dropDownCopy = _outerDivCopy.firstChild.firstChild;
     redoStack.clear();
-    undoStack.push([_outerDivCopy, _dropDownCopy.selectedIndex,0, 0]);
+    undoStack.push([_outerDivCopy, _dropDownCopy.selectedIndex, 0, 0]);
   }
 
   function createDragButton(outerDiv) {
@@ -380,21 +375,70 @@ docImage.onload = () => {
     $('.new-div').each(function () {
       let div_x = $(this).offset().left - $imageLeft;
       let div_y = $(this).offset().top - $imageTop;
-      let div_width = $(this).height();
-      let div_height = $(this).width();
+      let div_height = $(this).height();
+      let div_width = $(this).width();
       let _selectedIndex = $(this).find('select')[0].selectedIndex;
+      let selected_id =  $(this).find('option')[_selectedIndex].id;
+      console.log(div_x, div_y, div_width, div_height, selected_id);
 
-      console.log(div_x, div_y, div_width, div_height, _selectedIndex);
-
-      dataToSend.push([div_x, div_y, div_width, div_height, _selectedIndex]);
+      dataToSend.push({
+        "left": div_x,
+        "top": div_y,
+        "height": div_height,
+        "width": div_width,
+        "id": selected_id
+      });
     });
   }
 
 
   function sendData() {
-    getDataToSend();
     console.log(dataToSend);
+    getDataToSend();
+    pasteDivsFromReceivedData(dataToSend);
     //post Request here?
+  }
+
+
+  function setOptions(_dropdown) {
+    for (let i = 0; i < 3; i++) {
+      let op = new Option;
+      op.text = `something ${i}`;
+      op.value = `value${i}`;
+      op.id = `opt${i}`;
+      _dropdown.append(op);
+    }
+  }
+
+
+  function pasteDivsFromReceivedData(receivedData) {
+    $.each(receivedData, function () {
+      let current = $(this)[0]; 
+      let _outerDiv = elt('div', 'outer-div', `outerDiv${++divNumber}`, {
+        left: current.left + 'px',
+        top: current.top + 'px',
+        userSelect: 'none',
+      });
+      let _newDiv = elt('div', 'new-div', null, {
+        height: current.height + 'px',
+        width: current.width + 'px',
+        userSelect: 'none',
+      });
+      let _dropdown = elt('select', 'dropdown', null, {
+        height: current.height + 'px',
+        width: current.width + 'px',
+        userSelect: 'none',
+      });
+      setOptions(_dropdown);
+      // let opt = document.getElementById(current.id);
+      // console.log(_dropdown.querySelectorAll('option'),opt);
+      // _dropdown.selectedIndex = _dropdown.querySelectorAll('option').indexOf(opt);
+      // _dropdown.selectedIndex = _dropdown.find('option').index(_dropdown.find(`#${current.id}`)[0]);
+      _newDiv.append(_dropdown);
+      _outerDiv.append(_newDiv);
+      $('.container').append(_outerDiv);
+      console.log(container);
+    });
   }
 
 
