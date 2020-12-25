@@ -93,7 +93,9 @@ docImage.onload = () => {
       createResizePoints(newDiv);
 
       redoStack.clear();
-      undoStack.push([0, 0, 0, outerDiv.cloneNode(), outerDiv.innerHTML, dropdown.selectedIndex]);
+      let _outerDivCopy = outerDiv.cloneNode();
+      _outerDivCopy.innerHTML = outerDiv.innerHTML;
+      undoStack.push([0, 0, _outerDivCopy, dropdown.selectedIndex]);
     }
   }
 
@@ -158,11 +160,12 @@ docImage.onload = () => {
 
 
   function onDivRemove(e) {
-    let _outerDivCopy = e.target.parentElement;
+    let _outerDivCopy = e.target.parentElement.cloneNode();
+    _outerDivCopy.innerHTML = e.target.parentElement.innerHTML;
     container.removeChild(_outerDivCopy);
     let _dropDownCopy = _outerDivCopy.firstChild.firstChild;
     redoStack.clear();
-    undoStack.push([_outerDivCopy.cloneNode(), _outerDivCopy.innerHTML, _dropDownCopy.selectedIndex, 0, 0, 0]);
+    undoStack.push([_outerDivCopy, _dropDownCopy.selectedIndex,0, 0]);
   }
 
   function createDragButton(outerDiv) {
@@ -359,6 +362,7 @@ docImage.onload = () => {
     //deleting outer div ,which is in the undoStack, from document
     //remove only if exists(undo after deleting, for example, this element won't exist poppedElem[2] === 0)
     if (poppedElem[2] !== 0) {
+      console.log(poppedElem[2])
       container.removeChild(document.getElementById(poppedElem[2].id));
     }
     if (poppedElem[0] !== 0) {
