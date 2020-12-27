@@ -430,15 +430,17 @@ docImage.onload = () => {
         userSelect: 'none',
       });
       setOptions(_dropdown);
-      // let opt = document.getElementById(current.id);
-      // console.log(_dropdown.querySelectorAll('option'),opt);
-      // _dropdown.selectedIndex = _dropdown.querySelectorAll('option').indexOf(opt);
-      // _dropdown.selectedIndex = _dropdown.find('option').index(_dropdown.find(`#${current.id}`)[0]);
+      //find option with given id and set it to be selected
+      let received_opt = _dropdown.querySelector(`#${current.id}`);
+      let opts = _dropdown.querySelectorAll('option');
+      let index = [].indexOf.call(opts, received_opt);
+      _dropdown.selectedIndex = index;
+      
       _newDiv.append(_dropdown);
       _outerDiv.append(_newDiv);
       $('.container').append(_outerDiv);
-      console.log(container);
     });
+    console.log(container);
   }
 
 
