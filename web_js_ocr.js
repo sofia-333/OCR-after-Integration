@@ -149,15 +149,15 @@ docImage.onload = () => {
     })
     deleteButton.innerText = 'x'
 
-    $(deleteButton).on('click', onDivRemove)
+    $(deleteButton).on('click', removeDiv)
     outerDiv.appendChild(deleteButton);
   }
 
 
-  function onDivRemove(e) {
+  function removeDiv(e) {
+    container.removeChild(e.target.parentElement);
     let _outerDivCopy = e.target.parentElement.cloneNode();
     _outerDivCopy.innerHTML = e.target.parentElement.innerHTML;
-    container.removeChild(_outerDivCopy);
     let _dropDownCopy = _outerDivCopy.firstChild.firstChild;
     redoStack.clear();
     undoStack.push([_outerDivCopy, _dropDownCopy.selectedIndex, 0, 0]);
@@ -319,7 +319,7 @@ docImage.onload = () => {
     const _deleteButton = _dragButton.previousSibling;
     const _resizers = _newDiv.lastChild;
 
-    $(_deleteButton).on('click', onDivRemove)
+    $(_deleteButton).on('click', removeDiv)
 
     $(_dragButton).on('mousedown', (e) => {
       dragMousedown(e, _dragButton.parentNode);
