@@ -378,7 +378,7 @@ docImage.onload = () => {
       let div_height = $(this).height();
       let div_width = $(this).width();
       let _selectedIndex = $(this).find('select')[0].selectedIndex;
-      let selected_id =  $(this).find('option')[_selectedIndex].id;
+      let selected_id = $(this).find('option')[_selectedIndex].id;
       console.log(div_x, div_y, div_width, div_height, selected_id);
 
       dataToSend.push({
@@ -413,31 +413,53 @@ docImage.onload = () => {
 
   function pasteDivsFromReceivedData(receivedData) {
     $.each(receivedData, function () {
-      let current = $(this)[0]; 
-      let _outerDiv = elt('div', 'outer-div', `outerDiv${++divNumber}`, {
+      const current = $(this)[0];
+      const _outerDiv = elt('div', 'outer-div', `outerDiv${++divNumber}`, {
         left: current.left + 'px',
         top: current.top + 'px',
         userSelect: 'none',
       });
-      let _newDiv = elt('div', 'new-div', null, {
+      const _newDiv = elt('div', 'new-div', null, {
         height: current.height + 'px',
         width: current.width + 'px',
         userSelect: 'none',
       });
-      let _dropdown = elt('select', 'dropdown', null, {
+      const _dropdown = elt('select', 'dropdown', null, {
         height: current.height + 'px',
         width: current.width + 'px',
         userSelect: 'none',
       });
       setOptions(_dropdown);
       //find option with given id and set it to be selected
-      let received_opt = _dropdown.querySelector(`#${current.id}`);
-      let opts = _dropdown.querySelectorAll('option');
-      let index = [].indexOf.call(opts, received_opt);
+      const received_opt = _dropdown.querySelector(`#${current.id}`);
+      const opts = _dropdown.querySelectorAll('option');
+      const index = [].indexOf.call(opts, received_opt);
       _dropdown.selectedIndex = index;
-      
+
+      const _deleteButton = elt('button', 'delete-button', null, {
+        left: current.width + 1 + 'px',
+        top: -5 + 'px',
+        userSelect: 'none',
+      })
+      _deleteButton.innerText = 'x'
+      $(_deleteButton).on('click', removeDiv);
+
+      const _dragButton = elt('button', 'drag-button', null, {
+        left: current.width + 1 + 'px',
+        top: -5 + 'px',
+      })
+      //drag icon
+      const i = elt('i', 'fas fa-arrows-alt');
+      _dragButton.appendChild(i);
+      $(_dragButton).on('mousedown', (e) => {
+        dragMousedown(e, _dragButton.parentNode);
+      });
+
+      createResizePoints(_newDiv);
       _newDiv.append(_dropdown);
       _outerDiv.append(_newDiv);
+      _outerDiv.appendChild(_deleteButton);
+      _outerDiv.appendChild(_dragButton);
       $('.container').append(_outerDiv);
     });
     console.log(container);
