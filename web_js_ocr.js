@@ -130,9 +130,11 @@ docImage.onload = () => {
 
 
   function createDropdown(newDiv) {
+    const width = parsePx(newDiv.style.width);
+    const height = parsePx(newDiv.style.height);
     dropdown = elt('select', 'dropdown', null, {
-      width: divWidth + 'px',
-      height: divHeight + 'px',
+      width: width + 'px',
+      height: height + 'px',
       userSelect: 'none',
     })
     setOptions(dropdown);
@@ -142,8 +144,9 @@ docImage.onload = () => {
 
 
   function createDeleteButton(outerDiv) {
+    const width = parsePx(outerDiv.firstChild.style.width);//width of newDiv
     const deleteButton = elt('button', 'delete-button', null, {
-      left: divWidth + 1 + 'px',
+      left: width + 1 + 'px',
       top: -5 + 'px',
       userSelect: 'none',
     })
@@ -164,8 +167,9 @@ docImage.onload = () => {
   }
 
   function createDragButton(outerDiv) {
+    const width = parsePx(outerDiv.firstChild.style.width);//width of newDiv
     const dragButton = elt('button', 'drag-button', null, {
-      left: divWidth + 1 + 'px',
+      left: width + 1 + 'px',
       top: -5 + 'px',
     })
     //drag icon
@@ -436,30 +440,11 @@ docImage.onload = () => {
       const index = [].indexOf.call(opts, received_opt);
       _dropdown.selectedIndex = index;
 
-      const _deleteButton = elt('button', 'delete-button', null, {
-        left: current.width + 1 + 'px',
-        top: -5 + 'px',
-        userSelect: 'none',
-      })
-      _deleteButton.innerText = 'x'
-      $(_deleteButton).on('click', removeDiv);
-
-      const _dragButton = elt('button', 'drag-button', null, {
-        left: current.width + 1 + 'px',
-        top: -5 + 'px',
-      })
-      //drag icon
-      const i = elt('i', 'fas fa-arrows-alt');
-      _dragButton.appendChild(i);
-      $(_dragButton).on('mousedown', (e) => {
-        dragMousedown(e, _dragButton.parentNode);
-      });
-
       _newDiv.append(_dropdown);
-      createResizePoints(_newDiv);//this must be after appending dropdown to newDiv!
       _outerDiv.append(_newDiv);
-      _outerDiv.append(_deleteButton);
-      _outerDiv.append(_dragButton);
+      createResizePoints(_newDiv);
+      createDeleteButton(_outerDiv);
+      createDragButton(_outerDiv);
       $('.container').append(_outerDiv);
     });
     console.log(container);
