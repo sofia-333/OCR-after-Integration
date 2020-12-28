@@ -455,11 +455,11 @@ docImage.onload = () => {
         dragMousedown(e, _dragButton.parentNode);
       });
 
-      createResizePoints(_newDiv);
       _newDiv.append(_dropdown);
+      createResizePoints(_newDiv);//this must be after appending dropdown to newDiv!
       _outerDiv.append(_newDiv);
-      _outerDiv.appendChild(_deleteButton);
-      _outerDiv.appendChild(_dragButton);
+      _outerDiv.append(_deleteButton);
+      _outerDiv.append(_dragButton);
       $('.container').append(_outerDiv);
     });
     console.log(container);
